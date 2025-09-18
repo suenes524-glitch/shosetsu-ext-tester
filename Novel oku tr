@@ -1,0 +1,43 @@
+return {
+  id = "novelokutr",
+  name = "NovelOku TR",
+  base_url = "https://novelokutr.net",
+  lang = "tr",
+
+  -- Arama fonksiyonu
+  search = function(query)
+    return "/ara?s=" .. query
+  end,
+
+  -- Son eklenenler
+  latest = "/son-eklenenler",
+
+  -- Novel listesi
+  parse_novel_list = function(dom)
+    local novels = {}
+    for link in dom:select("div.list-item h3 a") do
+      table.insert(novels, {
+        title = link:text(),
+        url = link:attr("href")
+      })
+    end
+    return novels
+  end,
+
+  -- Bölüm listesi
+  parse_chapter_list = function(dom)
+    local chapters = {}
+    for link in dom:select("ul.chapter-list li a") do
+      table.insert(chapters, {
+        title = link:text(),
+        url = link:attr("href")
+      })
+    end
+    return chapters
+  end,
+
+  -- Bölüm içeriği
+  parse_chapter = function(dom)
+    return dom:select("div.chapter-content"):text()
+  end
+}
